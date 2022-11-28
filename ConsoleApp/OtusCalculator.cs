@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ConsoleApp.CalculatorExceptions;
 using System.Text;
 
 internal static class OtusCalculator
@@ -22,11 +22,11 @@ internal static class OtusCalculator
                     }
                     catch (Exception)
                     {
-                        throw new ExpressionIsWrong(); //case 3
+                        throw new ExpressionIsWrongException(); //case 3
                     }
-                    throw new OperatorIsMissing(); //case 1
+                    throw new OperatorIsMissingException(); //case 1
                 }
-                throw new ExpressionIsWrong(); //case 3
+                throw new ExpressionIsWrongException(); //case 3
             }
 
             int leftOperand;
@@ -42,7 +42,9 @@ internal static class OtusCalculator
                 }
                 catch (Exception)
                 {
-                    throw new OperandIsNotNumber(exprParts[0]); //case 4
+                    var ex = new OperandIsNotNumberException();
+                    ex.OperatorStr = exprParts[0];
+                    throw ex; //case 4
                 }
                 throw; //case 7
             }
@@ -60,7 +62,9 @@ internal static class OtusCalculator
                 }
                 catch (Exception)
                 {
-                    throw new OperandIsNotNumber(exprParts[2]); //case 4
+                    var ex = new OperandIsNotNumberException();
+                    ex.OperatorStr = exprParts[2];
+                    throw ex; //case 4                    
                 }
                 throw; //case 7
             }
@@ -80,11 +84,13 @@ internal static class OtusCalculator
                     Div(leftOperand, rightOperand);
                     break;
                 default:
-                    throw new OperatorIsWrong(exprParts[1]);  //case 2
+                    var ex = new OperatorIsWrongException();
+                    ex.Data.Add("operator", exprParts[1]);
+                    throw ex;  //case 2
             }
 
         }
-        catch (OperatorIsMissing) //case 1
+        catch (OperatorIsMissingException) //case 1
         {
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
@@ -92,7 +98,7 @@ internal static class OtusCalculator
             Console.ResetColor();
             Console.Write("\n");
         }
-        catch (OperatorIsWrong ex) //case 2
+        catch (OperatorIsWrongException ex) //case 2
         {
             Console.BackgroundColor = ConsoleColor.Green;
             Console.ForegroundColor = ConsoleColor.White;
@@ -100,7 +106,7 @@ internal static class OtusCalculator
             Console.ResetColor();
             Console.Write("\n");
         }
-        catch (ExpressionIsWrong) //case 3
+        catch (ExpressionIsWrongException) //case 3
         {
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
@@ -108,11 +114,11 @@ internal static class OtusCalculator
             Console.ResetColor();
             Console.Write("\n");
         }
-        catch (OperandIsNotNumber ex) //case 4
+        catch (OperandIsNotNumberException ex) //case 4
         {
             Console.BackgroundColor = ConsoleColor.Red;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.Write($"Операнд {ex.operatorStr} не является числом");
+            Console.Write($"Операнд {ex.OperatorStr} не является числом");
             Console.ResetColor();
             Console.Write("\n");
         }
@@ -124,7 +130,7 @@ internal static class OtusCalculator
             Console.ResetColor();
             Console.Write("\n");
         }
-        catch (BadLuckNumber) //case 6
+        catch (BadLuckNumberException) //case 6
         {
             Console.BackgroundColor = ConsoleColor.Green;
             Console.ForegroundColor = ConsoleColor.White;
@@ -154,7 +160,7 @@ internal static class OtusCalculator
         Console.WriteLine($"Ответ: {result}");
         if (result == 13)
         {
-            throw new BadLuckNumber();
+            throw new BadLuckNumberException();
         }
     }
     
@@ -164,7 +170,7 @@ internal static class OtusCalculator
         Console.WriteLine($"Ответ: {result}");
         if (result == 13)
         {
-            throw new BadLuckNumber();
+            throw new BadLuckNumberException();
         }
     }
 
@@ -174,7 +180,7 @@ internal static class OtusCalculator
         Console.WriteLine($"Ответ: {result}");
         if (result == 13)
         {
-            throw new BadLuckNumber();
+            throw new BadLuckNumberException();
         }
     }
 
@@ -184,7 +190,7 @@ internal static class OtusCalculator
         Console.WriteLine($"Ответ: {result}");
         if (result == 13)
         {
-            throw new BadLuckNumber();
+            throw new BadLuckNumberException();
         }
     }
 
